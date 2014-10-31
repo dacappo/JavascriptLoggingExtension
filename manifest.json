@@ -11,18 +11,7 @@
   },
 
   "content_scripts" : [
-=======
-   "manifest_version" : 2,
-   "name" : "JS Tracker",
-   "description" : "Tracking of client-side persisten XSS by use of taint br",
-   "version" : "1.0",
 
-   "background" : {
-      "scripts" : ["background.js"]
-   },
-
-   "content_scripts" : [
->>>>>>> 8fb7f53362d6695ebfa79f5258f89abb7978c98e
       {
          "matches" : ["http://*/*","https://*/*"],
          "js" : ["content.js"],
@@ -30,30 +19,18 @@
          "all_frames" : true
       }
    ],
-<<<<<<< HEAD
 
+   
    "permissions" : [
       "tabs", "http://*/*", "https://*/*"
    ],
-
+   
 /*
-=======
-   
-   "permissions" : [
-      "tabs", "http://*/*", "https://*/*"
-   ],
-   
->>>>>>> 8fb7f53362d6695ebfa79f5258f89abb7978c98e
    "browser_action" : {
       "default_icon" : "logo_transparent.png",
       "default_title" : "Persistent XSS Tracker"
    },
-<<<<<<< HEAD
 */
    "web_accessible_resources": ["observe.js"]
   
 }
-=======
-   "web_accessible_resources": ["wrapper.js", "taintTracker.js"]
-}
->>>>>>> 8fb7f53362d6695ebfa79f5258f89abb7978c98e
