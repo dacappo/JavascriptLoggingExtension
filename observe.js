@@ -3,12 +3,23 @@ var observer = {};
 (function(global) {
 
 	function report(func, args, result) {
+		window.postMessage({
+			"sender" : "OBSERVER",
+		 	"dataset" : {
+		 		"function" : func,
+		 		"arguments" : JSON.stringify(args),
+		 		"result" : result,
+		 		"timestamp" : new Date().getTime()
+		 	}});
+
 		console.log("The function " + func + " was called with the parameters " + JSON.stringify(args) + " and returned " + result);
 	}
 
 	function getFunctionFromString(functionName) {
+		// Window as global element
 		var copy = window;
 
+		// Retrieve function from string representation
 		functionName.split(".").forEach(function(describtor){
 			copy = copy[describtor];
 		})
@@ -19,8 +30,10 @@ var observer = {};
 
 	global.observe = function(observedFunctionDescribtor) {
 
+		// Copy functionality of observed function
 		var actualFunction = getFunctionFromString(observedFunctionDescribtor);
 
+		// Create wrapper function
 		var newFunction = function() {
 			var args, result;
 
@@ -37,12 +50,13 @@ var observer = {};
 			return result;
 		}
 
-		if (actualFunction) {
+		// Prevent XSS by checking for valid function-describtor
+		if (acutalFunction) {
 			eval(observedFunctionDescribtor + " = " + newFunction);
 		} else {
 			console.error("Function not found!");
 		}
+		
 	}
-	
 
 }(observer));
