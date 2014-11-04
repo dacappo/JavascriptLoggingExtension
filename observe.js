@@ -6,7 +6,20 @@ var observer = {};
 		console.log("The function " + func + " was called with the parameters " + JSON.stringify(args) + " and returned " + result);
 	}
 
-	global.observe = function(observedFunction) {
+	function getFunctionFromString(functionName) {
+		var copy = window;
+
+		functionName.split(".").forEach(function(describtor){
+			copy = copy[describtor];
+		})
+
+		return copy;
+	}
+
+
+	global.observe = function(observedFunctionDescribtor) {
+
+		var actualFunction = getFunctionFromString(observedFunctionDescribtor);
 
 		var newFunction = function() {
 			var args, result;
@@ -15,16 +28,20 @@ var observer = {};
 			args = Array.prototype.slice.call(arguments);
 
 			// Call the observed function with given arguments;
-			result = observedFunction.apply(this, args);
+			result = actualFunction.apply(this, args);
 
 			// Report observed function call
-			report(observedFunction, args, result);
+			report(observedFunctionDescribtor, args, result);
 
 			// Return actual results
 			return result;
 		}
 
-		observedFunction = newFunction;
+		if (actualFunction) {
+			eval(observedFunctionDescribtor + " = " + newFunction);
+		} else {
+			console.error("Function not found!");
+		}
 	}
 	
 
