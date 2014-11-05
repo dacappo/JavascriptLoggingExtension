@@ -9,7 +9,8 @@ var observer = {};
 		 		"function" : func,
 		 		"arguments" : JSON.stringify(args),
 		 		"result" : result,
-		 		"timestamp" : new Date().getTime()
+		 		"timestamp" : new Date().getTime(),
+		 		"url" : window.location.href
 		 	}});
 
 		console.log("The function " + func + " was called with the parameters " + JSON.stringify(args) + " and returned " + result);

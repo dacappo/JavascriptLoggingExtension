@@ -1,14 +1,15 @@
 (function() {
 
-	chrome.runtime.onMessage.addListener(
-		function(flow) {
-			// Log to server
-			if (settings.reportToServer) {
-				reportFlow(flow);
-			}
+	var observedFunctions = ["localStorage.getItem",
+							"localStorage.setItem",
+							"sessionStorage.getItem",
+							"sessionStorage.setItem"];
 
-			// Log locally
-			
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.data === "observedFunctions") {
+				sendResponse(observedFunctions);
+			}
 		}
 	);
 
