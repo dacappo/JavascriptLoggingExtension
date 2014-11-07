@@ -3,6 +3,10 @@
 
 	var currentlyObservedFunctions;
 
+	function handleObservedFunctionCall(dataset) {
+		chrome.runtime.sendMessage({"type" : "reportObservedFunction", "data" : dataset});
+	}
+
 	// Listen for messages from OBSERVER
 	window.addEventListener("message", function(event) {
 		// Only own window as source allowed
@@ -31,7 +35,7 @@
 	script.text = xhr.responseText;
 
 	// Get functions that sould be observed from background script
-	chrome.runtime.sendMessage({"data" : "observedFunctions"}, function(response){
+	chrome.runtime.sendMessage({"type" : "getObservedFunctions"}, function(response){
 		response.forEach(function(observedFunction) {
 			script.text += 'observer.observe("' + observedFunction + '");';
 		});

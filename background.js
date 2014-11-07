@@ -7,7 +7,9 @@
 
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
-			if (request.data === "observedFunctions") {
+			if (request.type === "reportObservedFunction") {
+				reportObservedFunctionToServer(request.data);
+			} else if (request.type === "getObservedFunctions") {
 				sendResponse(observedFunctions);
 			}
 		}
