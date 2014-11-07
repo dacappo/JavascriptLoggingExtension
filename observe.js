@@ -11,7 +11,7 @@ var observer = {};
 		 		"result" : result,
 		 		"timestamp" : new Date().getTime(),
 		 		"url" : window.location.href
-		 	}});
+		 	}}, "*");
 
 		console.log("The function " + func + " was called with the parameters " + JSON.stringify(args) + " and returned " + result);
 	}
@@ -52,7 +52,7 @@ var observer = {};
 		}
 
 		// Prevent XSS by checking for valid function-describtor
-		if (acutalFunction) {
+		if (actualFunction) {
 			eval(observedFunctionDescribtor + " = " + newFunction);
 		} else {
 			console.error("Function not found!");

@@ -3,11 +3,6 @@
 
 	var currentlyObservedFunctions;
 
-	// Get functions that sould be observed from background script
-	chrome.runtime.sendMessage({"data" : "observedFunctions"}, function(response){
-		currentlyObservedFunctions = response;
-	});
-
 	// Listen for messages from OBSERVER
 	window.addEventListener("message", function(event) {
 		// Only own window as source allowed
@@ -35,12 +30,10 @@
 	// Set the script code
 	script.text = xhr.responseText;
 
-	// Append observer.observe(x) calls to injected script
-	currentlyObservedFunctions.forEach(function(observedFunction) {
-		script.text += 'observer.observe("' + observedFunction + '");'
-	});	
-
-	// Write the script tag into the DOM
-	document.documentElement.insertBefore(script, document.documentElement.firstChild);
-
-}());
+	// Get functions that sould be observed from background script
+	chrome.runtime.sendMessage({"data" : "observedFunctions"}, function(response){
+		response.forEach(function(observedFunction) {
+			script.text += 'observer.observe("' + observedFunction + '");';
+		});
+		document.documentElement.insertBefore(script, document.documentElement.firstChild);		
+	});
