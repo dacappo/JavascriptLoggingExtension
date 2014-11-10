@@ -7,7 +7,7 @@
 							"sessionStorage.setItem"];
 
 	var settings = {
-		"servers" : [{"host" : "localhost", "port" : 7000}]
+		"servers" : [{"host" : "127.0.0", "port" : 7000}]
 	};
 
 	function serializeForRequest(obj, key) {
@@ -28,7 +28,6 @@
 		});
 			
 	}
-
 
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
