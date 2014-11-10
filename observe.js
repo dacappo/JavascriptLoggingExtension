@@ -1,3 +1,5 @@
+"use strict";
+
 var observer = {};
 
 (function(global) {
@@ -23,7 +25,7 @@ var observer = {};
 		// Retrieve function from string representation
 		functionName.split(".").forEach(function(describtor){
 			copy = copy[describtor];
-		})
+		});
 
 		return copy;
 	}
@@ -49,7 +51,7 @@ var observer = {};
 
 			// Return actual results
 			return result;
-		}
+		};
 
 		// Prevent XSS by checking for valid function-describtor
 		if (actualFunction) {
@@ -58,6 +60,6 @@ var observer = {};
 			console.error("Function not found!");
 		}
 		
-	}
+	};
 
 }(observer));

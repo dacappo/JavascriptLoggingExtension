@@ -1,8 +1,6 @@
 (function() {
 	"use strict";
 
-	var currentlyObservedFunctions;
-
 	function handleObservedFunctionCall(dataset) {
 		chrome.runtime.sendMessage({"type" : "reportObservedFunction", "data" : dataset});
 	}
@@ -37,7 +35,8 @@
 	// Get functions that sould be observed from background script
 	chrome.runtime.sendMessage({"type" : "getObservedFunctions"}, function(response){
 		response.forEach(function(observedFunction) {
-			script.text += 'observer.observe("' + observedFunction + '");';
+			script.text += "observer.observe('" + observedFunction + "');";
 		});
 		document.documentElement.insertBefore(script, document.documentElement.firstChild);		
 	});
+}());
