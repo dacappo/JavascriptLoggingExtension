@@ -3,29 +3,34 @@
 
 	var http = require("http");
 	http.createServer(function (request, response) {
+		console.log("Request received from " + request.url + "! ");
+
 		// Get GET parameters from URL
 		var url = require("url");
-		var parameters = url.parse(request.url, true).query;
+		var qs = require("querystring");
+		var path = url.parse(request.url, true).pathname;
 
-		// Connect to MySql database
-		var mysql = require("mysql");
-		var connection = mysql.createConnection({
-			host : "localhost",
-			user : "",
-			password : ""
-		});
+		if (path === "/storeObservedFunctionCall") {
+			var body = "";
 
-		connection.connect();
+			request.on("data", function(data){
+				body += data;
+			});
 
-		connection.query("INSERT INTO ...", function(err) {
-			if (err) throw err;
+			console.log(body);
 
-			console.log("Successfully inserted!");
-		});
-		
+			request.on("end", function() {
+				var parameters = qs.parse(body);
+				var database = require("./database");
+				database.storeObservedFunctionCall(JSON.parse(parameters.data));
+			});
+			
+		} else if (path === "/") {
+
+		}
 
 		response.writeHead(200, {"Content-Type": "text/plain"});
-		response.end(JSON.stringify(parameters));
+		response.end();
 	}).listen(7000, "127.0.0.1");
 	console.log("Server is up and running at http://127.0.0.1:7000");
 }());

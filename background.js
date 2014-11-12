@@ -7,7 +7,7 @@
 							"sessionStorage.setItem"];
 
 	var settings = {
-		"servers" : [{"host" : "127.0.0", "port" : 7000}]
+		"servers" : [{"host" : "127.0.0.1", "port" : 7000}]
 	};
 
 	function serializeForRequest(obj, key) {
@@ -18,7 +18,7 @@
 
 		settings.servers.forEach(function(server){
 			var xhr = new XMLHttpRequest();
-			var src = "http://" + server.host + ":" + server.port + "/reportFlow.php";
+			var src = "http://" + server.host + ":" + server.port + "/storeObservedFunctionCall";
 			var data = 	serializeForRequest(obseredFunctionCall, "data");
 
 			xhr.open("POST", src, true);
