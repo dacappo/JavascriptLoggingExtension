@@ -1,6 +1,7 @@
 (function() {
 	"use strict";
 
+	// Reports observed function call to background.js
 	function handleObservedFunctionCall(dataset) {
 		chrome.runtime.sendMessage({"type" : "reportObservedFunction", "data" : dataset});
 	}
@@ -8,9 +9,7 @@
 	// Listen for messages from OBSERVER
 	window.addEventListener("message", function(event) {
 		// Only own window as source allowed
-		if (event.source !== window) {
-			return;
-		}
+		if (event.source !== window) return;
 
 		// Only messages from the page and not the content script
 		if (event.data.sender && (event.data.sender === "OBSERVER")) {
@@ -32,7 +31,8 @@
 	// Set the script code
 	script.text = xhr.responseText;
 
-	// Get functions that sould be observed from background script
+	// Get functions that sould be observed from background script 
+	// TODO: Probably little to late due to callback
 	chrome.runtime.sendMessage({"type" : "getObservedFunctions"}, function(response){
 		response.forEach(function(observedFunction) {
 			script.text += "observer.observe('" + observedFunction + "');";

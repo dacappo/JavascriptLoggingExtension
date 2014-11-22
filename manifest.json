@@ -24,12 +24,6 @@
       "tabs", "http://*/*", "https://*/*"
    ],
    
-/*
-   "browser_action" : {
-      "default_icon" : "logo_transparent.png",
-      "default_title" : "Javascript Logging"
-   },
-*/
    "web_accessible_resources": ["observe.js"]
   
 }

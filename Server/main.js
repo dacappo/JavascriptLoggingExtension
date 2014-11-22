@@ -1,9 +1,9 @@
+// Trivial stuff - no comments needed
 (function(){
 	"use strict";
 
 	var http = require("http");
 	http.createServer(function (request, response) {
-		console.log("Request received from " + request.url + "! ");
 		response.writeHead(200, {"Content-Type": "text/plain"});
 
 		// Get GET parameters from URL
