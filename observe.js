@@ -45,6 +45,46 @@ var observer = {};
 		});
 	}
 
+	/* New setter function for cookies */
+  	function setCookie(input) {
+
+	    // Restore the document.cookie property
+	    delete document.cookie;
+
+	    // Set the cookie
+	  	document.cookie = input;
+
+	    // Redefine the getter and setter for document.cookie
+	    exports.wrapCookie();
+
+	    // Log function call
+	    report("document.setCookie", input, null);
+  	};
+
+  	/* New getter function for cookies */
+  	function getCookie() {
+
+	    // Restore the document.cookie property
+	    delete document.cookie;
+
+	    // Cache the resulting cookie value
+	    var result = document.cookie;
+
+	    // Redefine the getter and setter for document.cookie
+	    exports.wrapCookie();
+
+	    // Log cookie values
+	    report("document.getCookie", null , result);
+
+	    // Return the cookie value
+	    return result;
+  	};
+
+ 	/* Wraps the setter and getter of document.cookie */
+  	exports.wrapCookie = function() {
+    	Object.defineProperty(document, "cookie", { "get" : getCookie, "set" : setCookie});
+  	};
+
 	// Function to observe functions given by a describtor
 	exports.observe = function(observedFunctionDescribtor) {
 
@@ -75,5 +115,7 @@ var observer = {};
 		wrapFunction(observedFunctionDescribtor, newFunction);
 		
 	};
+
+	exports.wrapCookie();
 
 }(observer));
