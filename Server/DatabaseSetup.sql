@@ -10,3 +10,5 @@ INSERT INTO JsObserver.ObservedFunctions VALUES("sessionStorage.setItem");
 INSERT INTO JsObserver.ObservedFunctions VALUES("sessionStorage.getItem");
 INSERT INTO JsObserver.ObservedFunctions VALUES("localStorage.setItem");
 INSERT INTO JsObserver.ObservedFunctions VALUES("localStorage.getItem");
+INSERT INTO JsObserver.ObservedFunctions VALUES("postMessage");
+INSERT INTO JsObserver.ObservedFunctions VALUES("addEventListener");

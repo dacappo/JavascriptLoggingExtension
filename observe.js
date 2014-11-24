@@ -5,9 +5,12 @@ var observer = {};
 
 (function(exports) {
 
+	// Copy of postMesage API that enables its observing
+	var alternativePostMessage = window.postMessage;
+
 	// Reports function call to content.js
 	function report(func, args, result) {
-		window.postMessage({
+		alternativePostMessage({
 			"sender" : "OBSERVER",
 		 	"dataset" : {
 		 		"function" : func,
@@ -116,6 +119,7 @@ var observer = {};
 		
 	};
 
+	// Wrap document.cookie by default
 	exports.wrapCookie();
 
 }(observer));
