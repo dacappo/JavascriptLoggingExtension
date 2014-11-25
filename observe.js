@@ -1,9 +1,8 @@
-"use strict";
-
 // Global observer object
 var observer = {};
 
 (function(exports) {
+	"use strict";
 
 	// Copy of postMesage API that enables its observing
 	var alternativePostMessage = window.postMessage;
@@ -17,6 +16,7 @@ var observer = {};
 		 		"arguments" : JSON.stringify(args),
 		 		"result" : result,
 		 		"url" : window.location.href,
+		 		"referrer" : window.document.referrer,
 		 		"origin" : window.location.origin
 		 	}
 		 }, "*");
@@ -62,7 +62,7 @@ var observer = {};
 
 	    // Log function call
 	    report("document.setCookie", input, null);
-  	};
+  	}
 
   	/* New getter function for cookies */
   	function getCookie() {
@@ -81,7 +81,7 @@ var observer = {};
 
 	    // Return the cookie value
 	    return result;
-  	};
+  	}
 
  	/* Wraps the setter and getter of document.cookie */
   	exports.wrapCookie = function() {

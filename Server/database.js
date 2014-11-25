@@ -2,17 +2,18 @@
 	"use strict";
 
 	var password = process.env.KEY;
+	var user = process.env.USER;
 
-	exports.storeObservedFunctionCalls = function(data) {
+	exports.storeObservedFunctionCall = function(data) {
 
-		var query = "INSERT INTO `FunctionCalls` (function, arguments, result, origin, url, timestamp) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+		var query = "INSERT INTO `FunctionCalls` (Function, Arguments, Result, Origin, Url, TabUrl, Referrer, Timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
 		// Connect to MySql database
 		var mysql = require("mysql");
 		var connection = mysql.createConnection({
 			host : "localhost",
 			database : "JsObserver",
-			user : "observer" ,	
+			user :  user,	
 			password : password	//process.env.KEY
 		});
 
@@ -23,7 +24,9 @@
 								observedFunctionCall.arguments, 
 								observedFunctionCall.result, 
 								observedFunctionCall.origin, 
-								observedFunctionCall.url];
+								observedFunctionCall.url,
+								observedFunctionCall.tabUrl,
+								observedFunctionCall.referrer];
 
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
@@ -44,7 +47,7 @@
 		var connection = mysql.createConnection({
 			host : "localhost",
 			database : "JsObserver",
-			user : "observer" ,	
+			user : user,	
 			password : password	//process.env.KEY
 		});
 

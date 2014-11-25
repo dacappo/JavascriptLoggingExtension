@@ -2,7 +2,7 @@
 	"use strict";
 
 	// Set of observed functions
-	var cacheLimit = 30;
+	var cacheLimit = 50;
 	var observedFunctions = [];
 	var observedFunctionCalls = [];
 
@@ -16,9 +16,10 @@
 		return key + "=" + encodeURIComponent(JSON.stringify(obj));
 	}
 
-	function cacheObservedFunctionCalls(obseredFunctionCall) {
+	function cacheObservedFunctionCall(observedFunctionCall) {
 		observedFunctionCalls.push(observedFunctionCall);
-		if (observedFunctionCalls.size >= 30) reportObservedFunctionCallsToServer();
+		console.log("Observed function logged " + JSON.stringify(observedFunctionCall));
+		if (observedFunctionCalls.length >= cacheLimit) reportObservedFunctionCallsToServer();
 	}
 
 	// Sends report to each listed server
@@ -33,7 +34,8 @@
 			// Empty function call cache
 			observedFunctionCalls = [];
 
-			// Send cached function calls
+
+			// Send cached function call
 			xhr.open("POST", src, true);
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhr.send(data);
@@ -42,8 +44,8 @@
 			
 	}
 
-	// Gets observed functions set from server when new window is created
-	chrome.windows.onCreated.addListener(function(){
+	function updateObservedFunctions() {
+
 		settings.servers.forEach(function(server){
 			var xhr = new XMLHttpRequest();
 			var src = "http://" + server.host + ":" + server.port + "/getObservedFunctions";
@@ -60,12 +62,21 @@
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhr.send();
 		});
-	});
+	}
+
+	// Gets observed functions set from server when new window is created
+	chrome.windows.onCreated.addListener(updateObservedFunctions);
+	chrome.runtime.onInstalled.addListener(updateObservedFunctions);
+
+	// On suspend handler
+	chrome.runtime.onSuspend.addListener(reportObservedFunctionCallsToServer);
 
 	// Listens for reported function calls from content.js
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.type === "reportObservedFunction") {
+				// Get called URL in case of a framed function report
+				request.data.tabUrl = sender.tab.url;
 				cacheObservedFunctionCall(request.data);
 			} else if (request.type === "getObservedFunctions") {
 				sendResponse(observedFunctions);

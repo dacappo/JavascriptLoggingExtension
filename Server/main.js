@@ -21,7 +21,16 @@
 			request.on("end", function() {
 				var parameters = qs.parse(body);
 				var database = require("./database");
-				database.storeObservedFunctionCall(JSON.parse(parameters.data));
+				var parsedParameters;
+
+				try {
+					parsedParameters = JSON.parse(parameters.data);
+				} catch(e) {
+					console.log("JSON parse error occured!");
+				}
+
+				console.log("--- Report received! ---");
+				database.storeObservedFunctionCall(parsedParameters);
 			});
 
 			response.end();
