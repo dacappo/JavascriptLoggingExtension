@@ -11,7 +11,7 @@
 		var qs = require("querystring");
 		var path = url.parse(request.url, true).pathname;
 
-		if (path === "/storeObservedFunctionCall") {
+		if (path === "/storeObservedFunctionCalls") {
 			var body = "";
 
 			request.on("data", function(data){

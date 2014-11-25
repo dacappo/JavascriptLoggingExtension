@@ -2,7 +2,9 @@
 	"use strict";
 
 	// Set of observed functions
-	var observedFunctions =[];
+	var cacheLimit = 30;
+	var observedFunctions = [];
+	var observedFunctionCalls = [];
 
 	// Settings for server connection(s)
 	var settings = {
@@ -14,14 +16,24 @@
 		return key + "=" + encodeURIComponent(JSON.stringify(obj));
 	}
 
-	// Sends report to each listed server
-	function reportObservedFunctionCallToServer(obseredFunctionCall) {
+	function cacheObservedFunctionCalls(obseredFunctionCall) {
+		observedFunctionCalls.push(observedFunctionCall);
+		if (observedFunctionCalls.size >= 30) reportObservedFunctionCallsToServer();
+	}
 
+	// Sends report to each listed server
+	function reportObservedFunctionCallsToServer() {
+
+		// In case of multiple servers - probably not necessary
 		settings.servers.forEach(function(server){
 			var xhr = new XMLHttpRequest();
-			var src = "http://" + server.host + ":" + server.port + "/storeObservedFunctionCall";
-			var data = 	serializeForRequest(obseredFunctionCall, "data");
+			var src = "http://" + server.host + ":" + server.port + "/storeObservedFunctionCalls";
+			var data = 	serializeForRequest(observedFunctionCalls, "data");
 
+			// Empty function call cache
+			observedFunctionCalls = [];
+
+			// Send cached function calls
 			xhr.open("POST", src, true);
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhr.send(data);
@@ -54,7 +66,7 @@
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.type === "reportObservedFunction") {
-				reportObservedFunctionCallToServer(request.data);
+				cacheObservedFunctionCall(request.data);
 			} else if (request.type === "getObservedFunctions") {
 				sendResponse(observedFunctions);
 			}
