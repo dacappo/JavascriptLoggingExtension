@@ -1,12 +1,17 @@
 CREATE SCHEMA JsObserver;
-CREATE TABLE JsObserver.FunctionCalls (	Function varchar(200),
-								Arguments varchar(1000),
-								Result varchar(1000),
-								Origin varchar(100),
-								Url varchar(300),
-								TabUrl varchar(300),
-								Referrer varchar(300),
-								Timestamp timestamp);
+CREATE TABLE JsObserver.FunctionCalls (	Id INT NOT NULL AUTO_INCREMENT,
+					Function VARCHAR(200),
+					Result TEXT,
+					Origin VARCHAR(300),
+					Url TEXT,
+					TabUrl TEXT,
+					Referrer TEXT,
+					Timestamp TIMESTAMP,
+					PRIMARY KEY (Id));
+CREATE TABLE JsObserver.FunctionCallArguments (	FunctionCallId INT NOT NULL,
+						Argument TEXT,
+						Position TINYINT,
+						FOREIGN KEY (FunctionCallId) REFERENCES JsObserver.FunctionCalls(Id));
 CREATE TABLE JsObserver.ObservedFunctions (ObservedFunction varchar(200));
 INSERT INTO JsObserver.ObservedFunctions VALUES("sessionStorage.setItem");
 INSERT INTO JsObserver.ObservedFunctions VALUES("sessionStorage.getItem");
