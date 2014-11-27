@@ -8,7 +8,7 @@
 
 	// Settings for server connection(s)
 	var settings = {
-		"servers" : [{"host" : "127.0.0.1", "port" : 7000}]
+		"servers" : [{"host" : "217.119.58.205", "port" : 7000}]
 	};
 
 	// Serializes data for reporting to server
@@ -28,7 +28,7 @@
 		// In case of multiple servers - probably not necessary
 		settings.servers.forEach(function(server){
 			var xhr = new XMLHttpRequest();
-			var src = "http://" + server.host + ":" + server.port + "/storeObservedFunctionCalls";
+			var src = "https://" + server.host + ":" + server.port + "/storeObservedFunctionCalls";
 			var data = 	serializeForRequest(observedFunctionCalls, "data");
 
 			// Empty function call cache
@@ -48,7 +48,7 @@
 
 		settings.servers.forEach(function(server){
 			var xhr = new XMLHttpRequest();
-			var src = "http://" + server.host + ":" + server.port + "/getObservedFunctions";
+			var src = "https://" + server.host + ":" + server.port + "/getObservedFunctions";
 
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4 && xhr.status === 200) {
