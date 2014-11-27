@@ -1,5 +1,5 @@
 CREATE SCHEMA JsObserver;
-CREATE TABLE JsObserver.FunctionCalls (	Id CHAR(36) NOT NULL,
+CREATE TABLE JsObserver.FunctionCalls (	Id INT NOT NULL AUTO_INCREMENT,
 					Function VARCHAR(200),
 					Result TEXT,
 					Origin VARCHAR(300),
@@ -8,7 +8,7 @@ CREATE TABLE JsObserver.FunctionCalls (	Id CHAR(36) NOT NULL,
 					Referrer TEXT,
 					Timestamp TIMESTAMP,
 					PRIMARY KEY (Id));
-CREATE TABLE JsObserver.FunctionCallArguments (	FunctionCallId CHAR(36) NOT NULL,
+CREATE TABLE JsObserver.FunctionCallArguments (	FunctionCallId INT NOT NULL,
 						Argument TEXT,
 						Position TINYINT,
 						FOREIGN KEY (FunctionCallId) REFERENCES JsObserver.FunctionCalls(Id));

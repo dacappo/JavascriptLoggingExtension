@@ -4,9 +4,22 @@
 	var password = process.env.KEY;
 	var user = process.env.USER;
 
+	function storeArguments(connection, functionCallId, args) {
+
+		var query = "INSERT INTO `FunctionCallArguments` (FunctionCallId, Argument, Position) VALUES (?, ?, ?)";
+
+		args.forEach(function(argument, pos) {
+			var parameters = [functionCallId, argument, pos];
+
+			connection.query(query, parameters, function(err) {
+				if (err) throw err;
+			});
+		});
+	}
+
 	exports.storeObservedFunctionCall = function(data) {
 
-		var query = "INSERT INTO `FunctionCalls` (Function, Arguments, Result, Origin, Url, TabUrl, Referrer, Timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+		var query = "INSERT INTO `FunctionCalls` (Id, Function, Result, Origin, Url, TabUrl, Referrer, Timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
 		// Connect to MySql database
 		var mysql = require("mysql");
@@ -20,8 +33,11 @@
 		connection.connect();
 
 		data.forEach(function(observedFunctionCall) {
-			var parameters = [	observedFunctionCall.function, 
-								observedFunctionCall.arguments, 
+			var uuid = require('node-uuid');
+			observedFunctionCall.id = uuid.v1();
+
+			var parameters = [	observedFunctionCall.id,
+								observedFunctionCall.function,
 								observedFunctionCall.result, 
 								observedFunctionCall.origin, 
 								observedFunctionCall.url,
@@ -31,7 +47,9 @@
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
 				console.log("Successfully inserted " + observedFunctionCall.function + "!");
+				storeArguments(connection, observedFunctionCall.id, JSON.parse(observedFunctionCall.arguments));
 			});
+
 		});
 
 		connection.end();
