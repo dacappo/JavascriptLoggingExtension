@@ -2,8 +2,15 @@
 (function(){
 	"use strict";
 
-	var http = require("http");
-	http.createServer(function (request, response) {
+	var https = require("https");
+	var fs = require("fs");
+
+	var options = {
+		key : fs.readFileSync("../../../myssl/private/privkey.pem"),
+		cert: fs.readFileSync("../../../myssl/public/cert.pem")
+	};
+
+	https.createServer(options, function (request, response) {
 		response.writeHead(200, {"Content-Type": "text/plain"});
 
 		// Get GET parameters from URL
@@ -44,6 +51,6 @@
 			});
 		}
 		
-	}).listen(7000, "127.0.0.1");
-	console.log("Server is up and running at http://127.0.0.1:7000");
+	}).listen(7000, "0.0.0.0");
+	console.log("Server is up and running at http://0.0.0.0:7000");
 }());
