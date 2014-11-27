@@ -51,6 +51,6 @@
 			});
 		}
 		
-	}).listen(7000, "0.0.0.0");
-	console.log("Server is up and running at https://0.0.0.0:7000");
+	}).listen(8000, "0.0.0.0");
+	console.log("Server is up and running at 0.0.0.0:8000");
 }());

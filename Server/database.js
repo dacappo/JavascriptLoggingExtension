@@ -1,4 +1,4 @@
-(function(exports) {
+function(exports) {
 	"use strict";
 
 	var password = process.env.KEY;
@@ -7,7 +7,10 @@
 	function storeArguments(connection, functionCallId, args) {
 
 		var query = "INSERT INTO `FunctionCallArguments` (FunctionCallId, Argument, Position) VALUES (?, ?, ?)";
-
+		
+		if (!Array.isArray(args)) {
+			args = [args];	
+		}
 		args.forEach(function(argument, pos) {
 			var parameters = [functionCallId, argument, pos];
 
@@ -52,7 +55,7 @@
 
 		});
 
-		connection.end();
+		//connection.end();
 	};
 
 	exports.getObservedFunctions = function(callback) {
