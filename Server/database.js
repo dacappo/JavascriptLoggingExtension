@@ -1,37 +1,43 @@
 (function(exports) {
 	"use strict";
+ 
+	var credentials = {
+			host : "localhost",
+			database : "JsObserver",
+			user : process.env.USER,	
+			password : process.env.KEY
+	};
 
-	var password = process.env.KEY;
-	var user = process.env.USER;
+	function storeArguments(functionCallId, args) {
 
-	function storeArguments(connection, functionCallId, args) {
+		// Connect to MySql database
+		var mysql = require("mysql");
+		var connection = mysql.createConnection(credentials);
 
-		var query = "INSERT INTO `FunctionCallArguments` (FunctionCallId, Argument, Position) VALUES (?, ?, ?)";
+		var query = "INSERT INTO `FunctionCallArguments` VALUES (?, ?, ?)";
 		
-		if (!Array.isArray(args)) {
-			args = [args];	
-		}
-		args.forEach(function(argument, pos) {
-			var parameters = [functionCallId, argument, pos];
+		// Fix since cookie arguments are not given as array
+		if (!Array.isArray(args)) args = [args];
+
+		// Loop through arguments array
+		args.forEach(function(arg, pos) {
+			var parameters = [functionCallId, arg, pos];
 
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
 			});
 		});
+
+		connection.end();
 	}
 
 	exports.storeObservedFunctionCall = function(data) {
 
-		var query = "INSERT INTO `FunctionCalls` (Id, Function, Result, Origin, Url, TabUrl, Referrer, Timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
-
 		// Connect to MySql database
 		var mysql = require("mysql");
-		var connection = mysql.createConnection({
-			host : "localhost",
-			database : "JsObserver",
-			user :  user,	
-			password : password	//process.env.KEY
-		});
+		var connection = mysql.createConnection(credentials);
+
+		var query = "INSERT INTO `FunctionCalls` (Id, Function, Result, Origin, Url, TabUrl, Referrer, Timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
 		connection.connect();
 
@@ -50,27 +56,20 @@
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
 				console.log("Successfully inserted " + observedFunctionCall.function + "!");
-				storeArguments(connection, observedFunctionCall.id, JSON.parse(observedFunctionCall.arguments));
+				storeArguments(observedFunctionCall.id, JSON.parse(observedFunctionCall.arguments));
 			});
 
 		});
 
-		//connection.end();
+		connection.end();
 	};
 
 	exports.getObservedFunctions = function(callback) {
 
-		var query = "SELECT ObservedFunction FROM JsObserver.ObservedFunctions";
-		var result = [];
-
-		// Connect to MySql database
 		var mysql = require("mysql");
-		var connection = mysql.createConnection({
-			host : "localhost",
-			database : "JsObserver",
-			user : user,	
-			password : password	//process.env.KEY
-		});
+		var connection = mysql.createConnection(credentials);
+		var	query = "SELECT ObservedFunction FROM JsObserver.ObservedFunctions";
+		var	result = [];		
 
 		connection.connect();
 
