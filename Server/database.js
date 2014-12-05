@@ -21,7 +21,7 @@
 
 		// Loop through arguments array
 		args.forEach(function(arg, pos) {
-			var parameters = [functionCallId, arg, pos];
+			var parameters = [functionCallId, JSON.stringify(arg), pos];
 
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
@@ -32,7 +32,7 @@
 	}
 
 	exports.storeObservedFunctionCall = function(data) {
-
+		if (!data) return;
 		// Connect to MySql database
 		var mysql = require("mysql");
 		var connection = mysql.createConnection(credentials);

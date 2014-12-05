@@ -6,8 +6,9 @@
 	var fs = require("fs");
 
 	var options = {
-		key : fs.readFileSync("../../../myssl/private/privkey.pem"),
-		cert: fs.readFileSync("../../../myssl/public/cert.pem")
+		key : fs.readFileSync("../../../ssl/private/sebastian-lekies.de.key"),
+		cert: fs.readFileSync("../../../ssl/certs/sebastian-lekies.de.crt"),
+		ca: fs.readFileSync("../../../ssl/certs/sub.class1.server.ca.pem")
 	};
 
 	https.createServer(options, function (request, response) {
