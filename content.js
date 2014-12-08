@@ -31,4 +31,7 @@
 	// Set the script code
 	script.text = xhr.responseText;
 
+	/* Write the script tag into the DOM */
+	document.documentElement.insertBefore(script, document.documentElement.firstChild);
+
 }());

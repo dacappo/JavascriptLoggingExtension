@@ -4,11 +4,31 @@ var observer = {};
 (function(exports) {
 	"use strict";
 
+	if (location.origin === "http://localhost" ||
+		location.origin === "https://localhost" ||
+		location.origin === "http://127.0.0.1" ||
+		location.origin === "https://127.0.0.1") return ;
+
 	// Copy of postMesage API that enables its observing
 	var alternativePostMessage = window.postMessage;
 
 	// Reports function call to content.js
 	function report(func, args, result) {
+		alternativePostMessage({
+			"sender" : "OBSERVER",
+		 	"dataset" : {
+		 		"function" : func,
+		 		"arguments" : JSON.stringify(args),
+		 		"result" : result,
+		 		"url" : window.location.href,
+		 		"referrer" : window.document.referrer,
+		 		"origin" : window.location.origin
+		 	}
+		 }, "*");
+	}
+
+	// Reports function call to content.js
+	function reportPostMessage(func, args, result) {
 		alternativePostMessage({
 			"sender" : "OBSERVER",
 		 	"dataset" : {
@@ -77,7 +97,7 @@ var observer = {};
 	    exports.wrapCookie();
 
 	    // Log cookie values
-	    report("document.getCookie", null , result);
+	    report("document.getCookie", [null] , result);
 
 	    // Return the cookie value
 	    return result;
@@ -88,9 +108,7 @@ var observer = {};
     	Object.defineProperty(document, "cookie", { "get" : getCookie, "set" : setCookie});
   	};
 
-  	exports.wrapPostMessage = function() {
-  		exports.wrap("postMessage");
-  	};
+  	
 
 	// Function to observe functions given by a describtor
 	exports.observe = function(observedFunctionDescribtor) {
@@ -123,14 +141,36 @@ var observer = {};
 		
 	};
 
+	exports.wrapPostMessage = function() {
+
+		// Create wrapper function
+		var newFunction = function() {
+			var args, result;
+
+			// Get array of arguments
+			args = Array.prototype.slice.call(arguments);
+
+			// Call the observed function with given arguments;
+			result = alternativePostMessage.apply(this, args);
+
+			// Report observed function call
+			reportPostMessage("window.postMessage", args, result);
+
+			// Return actual results
+			return result;
+		};
+
+		window.postMessage = newFunction;
+  	};
+
 	// Wrap document.cookie by default
 	exports.wrapCookie();
 	exports.wrapPostMessage();
 
-	exports.wrap("sessionStorage.setItem");
-	exports.wrap("sessionStorage.getItem");
-	exports.wrap("localStorage.setItem");
-	exports.wrap("localStorage.getItem");
-	exports.wrap("addEventListener");
+	exports.observe("sessionStorage.setItem");
+	exports.observe("sessionStorage.getItem");
+	exports.observe("localStorage.setItem");
+	exports.observe("localStorage.getItem");
+	exports.observe("addEventListener");
 
 }(observer));

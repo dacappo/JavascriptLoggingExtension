@@ -7,7 +7,7 @@
 
 	// Settings for server connection(s)
 	var settings = {
-		"servers" : [{"host" : "sebastian-lekies.de", "port" : 7000}]
+		"servers" : [{"host" : "sebastian-lekies.de", "port" : 443}]
 	};
 
 	// Serializes data for reporting to server
@@ -51,7 +51,7 @@
 		function(request, sender, sendResponse) {
 			if (request.type === "reportObservedFunction") {
 				// Get called URL in case of a framed function report
-				request.data.tabUrl = sender.tab.url;
+				if (sender.data) request.data.tabUrl = sender.tab.url;
 				cacheObservedFunctionCall(request.data);
 			}
 		}

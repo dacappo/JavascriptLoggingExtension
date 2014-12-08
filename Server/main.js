@@ -41,7 +41,7 @@
 				database.storeObservedFunctionCall(parsedParameters);
 			});
 
-			response.end();
+			response.end("Here");
 
 		}		
 	}).listen(8000, "0.0.0.0");
