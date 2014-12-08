@@ -31,12 +31,4 @@
 	// Set the script code
 	script.text = xhr.responseText;
 
-	// Get functions that sould be observed from background script 
-	// TODO: Probably little to late due to callback
-	chrome.runtime.sendMessage({"type" : "getObservedFunctions"}, function(response){
-		response.forEach(function(observedFunction) {
-			script.text += "observer.observe('" + observedFunction + "');";
-		});
-		document.documentElement.insertBefore(script, document.documentElement.firstChild);		
-	});
 }());

@@ -43,15 +43,7 @@
 
 			response.end();
 
-		} else if (path === "/getObservedFunctions") {
-			var database = require("./database");
-			database.getObservedFunctions(function(data){
-				console.log(JSON.stringify(data));
-				response.write(JSON.stringify(data));
-				response.end();
-			});
-		}
-		
+		}		
 	}).listen(8000, "0.0.0.0");
 	console.log("Server is up and running at 0.0.0.0:8000");
 }());

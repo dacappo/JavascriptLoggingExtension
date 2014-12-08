@@ -61,7 +61,7 @@ var observer = {};
 	    exports.wrapCookie();
 
 	    // Log function call
-	    report("document.setCookie", input, null);
+	    report("document.setCookie", [input], null);
   	}
 
   	/* New getter function for cookies */
@@ -83,9 +83,13 @@ var observer = {};
 	    return result;
   	}
 
- 	/* Wraps the setter and getter of document.cookie */
+ 	// Wraps the setter and getter of document.cookie
   	exports.wrapCookie = function() {
     	Object.defineProperty(document, "cookie", { "get" : getCookie, "set" : setCookie});
+  	};
+
+  	exports.wrapPostMessage = function() {
+  		exports.wrap("postMessage");
   	};
 
 	// Function to observe functions given by a describtor
@@ -121,5 +125,12 @@ var observer = {};
 
 	// Wrap document.cookie by default
 	exports.wrapCookie();
+	exports.wrapPostMessage();
+
+	exports.wrap("sessionStorage.setItem");
+	exports.wrap("sessionStorage.getItem");
+	exports.wrap("localStorage.setItem");
+	exports.wrap("localStorage.getItem");
+	exports.wrap("addEventListener");
 
 }(observer));
