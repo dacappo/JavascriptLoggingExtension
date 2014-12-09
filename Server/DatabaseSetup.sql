@@ -72,7 +72,8 @@ CREATE TABLE JsObserver.LocalStorageGetItemArguments (
 # window.postMessage
 CREATE TABLE JsObserver.WindowPostMessage (	
 					Id CHAR(36) NOT NULL,
-					Result TEXT,
+					Data TEXT,
+					MessageOrigin VARCHAR(300),
 					Origin VARCHAR(300),
 					Url TEXT,
 					TabUrl TEXT,
@@ -80,28 +81,6 @@ CREATE TABLE JsObserver.WindowPostMessage (
 					Timestamp TIMESTAMP,
 					PRIMARY KEY (Id));
 
-CREATE TABLE JsObserver.WindowPostMessageArguments (	
-					FunctionCallId CHAR(36) NOT NULL,
-					Argument TEXT,
-					Position TINYINT,
-					FOREIGN KEY (FunctionCallId) REFERENCES JsObserver.WindowPostMessage(Id));
-
-# window.addEventListener
-CREATE TABLE JsObserver.WindowAddEventListener (	
-					Id CHAR(36) NOT NULL,
-					Result TEXT,
-					Origin VARCHAR(300),
-					Url TEXT,
-					TabUrl TEXT,
-					Referrer TEXT,
-					Timestamp TIMESTAMP,
-					PRIMARY KEY (Id));
-
-CREATE TABLE JsObserver.WindowAddEventListenerArguments (	
-					FunctionCallId CHAR(36) NOT NULL,
-					Argument TEXT,
-					Position TINYINT,
-					FOREIGN KEY (FunctionCallId) REFERENCES JsObserver.WindowAddEventListener(Id));
 
 # document.cookie (set)
 CREATE TABLE JsObserver.DocumentSetCookie (	

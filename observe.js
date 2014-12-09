@@ -4,6 +4,7 @@ var observer = {};
 (function(exports) {
 	"use strict";
 
+	// Filter local addresses
 	if (location.origin === "http://localhost" ||
 		location.origin === "https://localhost" ||
 		location.origin === "http://127.0.0.1" ||
@@ -14,21 +15,6 @@ var observer = {};
 
 	// Reports function call to content.js
 	function report(func, args, result) {
-		alternativePostMessage({
-			"sender" : "OBSERVER",
-		 	"dataset" : {
-		 		"function" : func,
-		 		"arguments" : JSON.stringify(args),
-		 		"result" : result,
-		 		"url" : window.location.href,
-		 		"referrer" : window.document.referrer,
-		 		"origin" : window.location.origin
-		 	}
-		 }, "*");
-	}
-
-	// Reports function call to content.js
-	function reportPostMessage(func, args, result) {
 		alternativePostMessage({
 			"sender" : "OBSERVER",
 		 	"dataset" : {
@@ -68,19 +54,17 @@ var observer = {};
 		});
 	}
 
-	/* New setter function for cookies */
+	// New setter function for cookies
   	function setCookie(input) {
 
 	    // Restore the document.cookie property
 	    delete document.cookie;
 
-	    // Set the cookie
 	  	document.cookie = input;
 
 	    // Redefine the getter and setter for document.cookie
-	    exports.wrapCookie();
+	    exports.observeCookie();
 
-	    // Log function call
 	    report("document.setCookie", [input], null);
   	}
 
@@ -90,27 +74,41 @@ var observer = {};
 	    // Restore the document.cookie property
 	    delete document.cookie;
 
-	    // Cache the resulting cookie value
 	    var result = document.cookie;
 
 	    // Redefine the getter and setter for document.cookie
-	    exports.wrapCookie();
+	    exports.observeCookie();
 
-	    // Log cookie values
 	    report("document.getCookie", [null] , result);
-
-	    // Return the cookie value
 	    return result;
   	}
 
- 	// Wraps the setter and getter of document.cookie
-  	exports.wrapCookie = function() {
+ 	// Observes the setter and getter of document.cookie
+  	exports.observeCookie = function() {
     	Object.defineProperty(document, "cookie", { "get" : getCookie, "set" : setCookie});
   	};
 
-  	
+  	// Observes callbacks on the message listener
+  	exports.observePostMessage = function() {
+		window.addEventListener("message", function(event) {
+			// Only other windows as source allowed
+			if (event.source === window) return;
+			
+			window.postMessage({
+				"sender" : "OBSERVER",
+		 		"dataset" : {
+			 		"function" : "window.postMessage",
+			 		"data" : [JSON.stringify(event.data)],
+			 		"url" : window.location.href,
+			 		"referrer" : window.document.referrer,
+			 		"origin" : window.location.origin,
+			 		"messageOrigin" : event.origin
+				}
+		 	}, "*");
+		});
+  	};
 
-	// Function to observe functions given by a describtor
+	// Observes functions given by a describtor
 	exports.observe = function(observedFunctionDescribtor) {
 
 		// Copy functionality of observed function
@@ -123,16 +121,9 @@ var observer = {};
 		var newFunction = function() {
 			var args, result;
 
-			// Get array of arguments
 			args = Array.prototype.slice.call(arguments);
-
-			// Call the observed function with given arguments;
 			result = actualFunction.apply(this, args);
-
-			// Report observed function call
 			report(observedFunctionDescribtor, args, result);
-
-			// Return actual results
 			return result;
 		};
 
@@ -140,37 +131,13 @@ var observer = {};
 		wrapFunction(observedFunctionDescribtor, newFunction);
 		
 	};
-
-	exports.wrapPostMessage = function() {
-
-		// Create wrapper function
-		var newFunction = function() {
-			var args, result;
-
-			// Get array of arguments
-			args = Array.prototype.slice.call(arguments);
-
-			// Call the observed function with given arguments;
-			result = alternativePostMessage.apply(this, args);
-
-			// Report observed function call
-			reportPostMessage("window.postMessage", args, result);
-
-			// Return actual results
-			return result;
-		};
-
-		window.postMessage = newFunction;
-  	};
-
-	// Wrap document.cookie by default
-	exports.wrapCookie();
-	exports.wrapPostMessage();
+	
+	exports.observeCookie();
+	exports.observePostMessage();
 
 	exports.observe("sessionStorage.setItem");
 	exports.observe("sessionStorage.getItem");
 	exports.observe("localStorage.setItem");
 	exports.observe("localStorage.getItem");
-	exports.observe("addEventListener");
 
 }(observer));

@@ -1,7 +1,7 @@
 {
   "name": "Javascript Logging",
   "description": "This extension logges various Javascript API calls wihtin websites.",
-  "version": "0.1",
+  "version": "0.2",
   "manifest_version": 2,
 
   "background": {

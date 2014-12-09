@@ -1,7 +1,6 @@
 (function() {
 	"use strict";
 
-	// Set of observed functions
 	var cacheLimit = 50;
 	var observedFunctionCalls = [];
 
@@ -15,9 +14,10 @@
 		return key + "=" + encodeURIComponent(JSON.stringify(obj));
 	}
 
+	// Temporary caches function calls until the limit is reached
 	function cacheObservedFunctionCall(observedFunctionCall) {
 		observedFunctionCalls.push(observedFunctionCall);
-		console.log("Observed function logged " + JSON.stringify(observedFunctionCall));
+		console.log(JSON.stringify(observedFunctionCall));
 		if (observedFunctionCalls.length >= cacheLimit) reportObservedFunctionCallsToServer();
 	}
 
@@ -33,7 +33,6 @@
 			// Empty function call cache
 			observedFunctionCalls = [];
 
-
 			// Send cached function call
 			xhr.open("POST", src, true);
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -43,14 +42,13 @@
 			
 	}
 
-	// On suspend handler
+	// On suspend report observed function calls
 	chrome.runtime.onSuspend.addListener(reportObservedFunctionCallsToServer);
 
 	// Listens for reported function calls from content.js
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.type === "reportObservedFunction") {
-				// Get called URL in case of a framed function report
 				if (sender.data) request.data.tabUrl = sender.tab.url;
 				cacheObservedFunctionCall(request.data);
 			}

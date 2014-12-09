@@ -223,70 +223,17 @@
 		});
 	}
 
-	function storeWindowAddEventListenerArguments(observedFunctionCall) {
-
-		var query = "INSERT INTO `WindowAddEventListenerArguments` VALUES (?, ?, ?)";
-		
-		// Fix since cookie arguments are not given as array
-		var args = JSON.parse(observedFunctionCall.arguments);
-
-		// Loop through arguments array
-		args.forEach(function(arg, pos) {
-			var parameters = [observedFunctionCall.id, JSON.stringify(arg), pos];
-
-			connection.query(query, parameters, function(err) {
-				if (err) throw err;
-			});
-		});
-	}
-
-	function storeWindowAddEventListener(observedFunctionCall) {
-		var query = "INSERT INTO `WindowAddEventListener` VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
-
-		var uuid = require('node-uuid');
-		observedFunctionCall.id = uuid.v1();
-
-		var parameters = [	observedFunctionCall.id,
-							observedFunctionCall.result, 
-							observedFunctionCall.origin, 
-							observedFunctionCall.url,
-							observedFunctionCall.tabUrl,
-							observedFunctionCall.referrer];
-
-		connection.query(query, parameters, function(err) {
-			if (err) throw err;
-			console.log("Successfully inserted " + observedFunctionCall.function + "!");
-			storeWindowAddEventListenerArguments(observedFunctionCall);
-		});
-	}
-
-
-	function storeWindowPostMessageArguments(observedFunctionCall) {
-
-		var query = "INSERT INTO `WindowPostMessageArguments` VALUES (?, ?, ?)";
-		
-		// Fix since cookie arguments are not given as array
-		var args = JSON.parse(observedFunctionCall.arguments);
-
-		// Loop through arguments array
-		args.forEach(function(arg, pos) {
-			var parameters = [observedFunctionCall.id, JSON.stringify(arg), pos];
-
-			connection.query(query, parameters, function(err) {
-				if (err) throw err;
-			});
-		});
-	}
 
 	function storeWindowPostMessage(observedFunctionCall) {
 
-		var query = "INSERT INTO `WindowPostMessage` VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+		var query = "INSERT INTO `WindowPostMessage` VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
 		var uuid = require('node-uuid');
 		observedFunctionCall.id = uuid.v1();
 
 		var parameters = [	observedFunctionCall.id,
-							observedFunctionCall.result, 
+							observedFunctionCall.data,
+							observedFunctionCall.messageOrigin, 
 							observedFunctionCall.origin, 
 							observedFunctionCall.url,
 							observedFunctionCall.tabUrl,
@@ -295,7 +242,6 @@
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
-			storeWindowPostMessageArguments(observedFunctionCall);
 		});
 	}
 
@@ -318,14 +264,10 @@
 				storeDocumentSetCookie(observedFunctionCall);
 			} else if (observedFunctionCall.function === "document.getCookie") {
 				storeDocumentGetCookie(observedFunctionCall);
-			} else if (observedFunctionCall.function === "window.addEventListener") {
-				storeWindowAddEventListener(observedFunctionCall);
 			} else if (observedFunctionCall.function === "window.postMessage") {
 				storeWindowPostMessage(observedFunctionCall);
 			}
 		});
-
-		connection.end();
 	};
 
 }(exports));
