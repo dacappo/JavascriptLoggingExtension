@@ -44,8 +44,8 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 			storeSessionStorageSetItemArguments(observedFunctionCall);
+			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
 	}
 
@@ -82,8 +82,8 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 			storeSessionStorageGetItemArguments(observedFunctionCall);
+			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
 	}
 
@@ -120,8 +120,8 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 			storeLocalStorageSetItemArguments(observedFunctionCall);
+			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
 	}
 
@@ -158,8 +158,8 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 			storeLocalStorageGetItemArguments(observedFunctionCall);
+			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
 	}
 
@@ -196,8 +196,8 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 			storeDocumentSetCookieArguments(observedFunctionCall);
+			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
 	}
 
@@ -248,8 +248,7 @@
 	exports.storeObservedFunctionCall = function(data) {
 		if (!data) return;
 
-		connection = mysql.createConnection(credentials);
-		connection.connect();	
+		connection = mysql.createConnection(credentials);	
 
 		data.forEach(function(observedFunctionCall) {
 			if (observedFunctionCall.function === "sessionStorage.setItem") {

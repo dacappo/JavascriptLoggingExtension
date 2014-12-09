@@ -17,7 +17,7 @@
 	// Temporary caches function calls until the limit is reached
 	function cacheObservedFunctionCall(observedFunctionCall) {
 		observedFunctionCalls.push(observedFunctionCall);
-		console.log(JSON.stringify(observedFunctionCall));
+		//console.log(JSON.stringify(observedFunctionCall));
 		if (observedFunctionCalls.length >= cacheLimit) reportObservedFunctionCallsToServer();
 	}
 
