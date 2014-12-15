@@ -138,6 +138,7 @@
 
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
+
 			});
 		});
 	}
@@ -160,6 +161,7 @@
 			if (err) throw err;
 			storeLocalStorageGetItemArguments(observedFunctionCall);
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
+			
 		});
 	}
 
@@ -176,7 +178,8 @@
 
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
-			});
+				
+			});			
 		});
 	}
 
@@ -198,6 +201,7 @@
 			if (err) throw err;
 			storeDocumentSetCookieArguments(observedFunctionCall);
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
+			
 		});
 	}
 
@@ -248,7 +252,8 @@
 	exports.storeObservedFunctionCall = function(data) {
 		if (!data) return;
 
-		connection = mysql.createConnection(credentials);	
+		var connection = mysql.createConnection(credentials);
+		connection.connect();
 
 		data.forEach(function(observedFunctionCall) {
 			if (observedFunctionCall.function === "sessionStorage.setItem") {
@@ -267,6 +272,8 @@
 				storeWindowPostMessage(observedFunctionCall);
 			}
 		});
+
+		connection.end();
 	};
 
 }(exports));

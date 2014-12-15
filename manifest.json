@@ -24,6 +24,9 @@
       "tabs", "http://*/*", "https://*/*"
    ],
    
-   "web_accessible_resources": ["observe.js"]
+   "web_accessible_resources": ["observe.js"],
+
+   "icons": { "48": "icon48.png",
+              "128": "icon128.png" }
   
 }

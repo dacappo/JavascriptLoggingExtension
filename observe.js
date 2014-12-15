@@ -10,12 +10,9 @@ var observer = {};
 		location.origin === "http://127.0.0.1" ||
 		location.origin === "https://127.0.0.1") return ;
 
-	// Copy of postMesage API that enables its observing
-	var alternativePostMessage = window.postMessage;
-
 	// Reports function call to content.js
 	function report(func, args, result) {
-		alternativePostMessage({
+		window.postMessage({
 			"sender" : "OBSERVER",
 		 	"dataset" : {
 		 		"function" : func,

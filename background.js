@@ -37,7 +37,7 @@
 			xhr.open("POST", src, true);
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhr.send(data);
-			console.log("Observed function logged");
+			console.log("Set of " + cacheLimit + " Observed functions logged");
 		});
 			
 	}
