@@ -44,9 +44,10 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			storeSessionStorageSetItemArguments(observedFunctionCall);
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
+
+		storeSessionStorageSetItemArguments(observedFunctionCall);
 	}
 
 	function storeSessionStorageGetItemArguments(observedFunctionCall) {
@@ -59,7 +60,6 @@
 		// Loop through arguments array
 		args.forEach(function(arg, pos) {
 			var parameters = [observedFunctionCall.id, JSON.stringify(arg), pos];
-
 			connection.query(query, parameters, function(err) {
 				if (err) throw err;
 			});
@@ -82,9 +82,11 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			storeSessionStorageGetItemArguments(observedFunctionCall);
+			
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
+
+		storeSessionStorageGetItemArguments(observedFunctionCall);
 	}
 
 	function storeLocalStorageSetItemArguments(observedFunctionCall) {
@@ -120,9 +122,11 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			storeLocalStorageSetItemArguments(observedFunctionCall);
+			
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 		});
+
+		storeLocalStorageSetItemArguments(observedFunctionCall);
 	}
 
 	function storeLocalStorageGetItemArguments(observedFunctionCall) {
@@ -159,10 +163,11 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			storeLocalStorageGetItemArguments(observedFunctionCall);
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 			
 		});
+
+		storeLocalStorageGetItemArguments(observedFunctionCall);
 	}
 
 	function storeDocumentSetCookieArguments(observedFunctionCall) {
@@ -199,10 +204,12 @@
 
 		connection.query(query, parameters, function(err) {
 			if (err) throw err;
-			storeDocumentSetCookieArguments(observedFunctionCall);
+			
 			console.log("Successfully inserted " + observedFunctionCall.function + "!");
 			
 		});
+
+		storeDocumentSetCookieArguments(observedFunctionCall);
 	}
 
 	
