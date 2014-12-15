@@ -252,7 +252,7 @@
 	exports.storeObservedFunctionCall = function(data) {
 		if (!data) return;
 
-		var connection = mysql.createConnection(credentials);
+		connection = mysql.createConnection(credentials);
 		connection.connect();
 
 		data.forEach(function(observedFunctionCall) {
