@@ -259,7 +259,7 @@
 	function storeVisitedSite(visitedSite) {
 		var query = "INSERT INTO JsObserver.VisitedSites (Url, Origin, CookieUsed, SessionStorageUsed, LocalStorageUsed, Timestamp) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP);";
 
-		var parameters = [	visitedSite.id,
+		var parameters = [
 							visitedSite.url,
 							visitedSite.origin, 
 							visitedSite.cookieUsed,
@@ -305,8 +305,8 @@
 		connection = mysql.createConnection(credentials);
 		connection.connect();
 
-		data.forEach(function(observedFunctionCall) {
-			storeVisitedSite(data);
+		data.forEach(function(visitedSite) {
+			storeVisitedSite(visitedSite);
 		});
 
 		connection.end();

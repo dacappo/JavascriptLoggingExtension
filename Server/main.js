@@ -19,7 +19,7 @@
 		var qs = require("querystring");
 		var path = url.parse(request.url, true).pathname;
 
-		if (path === "/storeObservedFunctionCalls" || path === "/storeVisitedSite") {
+		if (path === "/storeObservedFunctionCalls" || path === "/storeVisitedSites") {
 			var body = "";
 
 			request.on("data", function(data){
@@ -39,7 +39,7 @@
 
 				console.log("--- Request received! ---");
 				if (path === "/storeObservedFunctionCalls") database.storeObservedFunctionCall(parsedParameters);
-				if (path === "/storeVisitedSites") database.storeVisitedSite(parsedParameters);
+				if (path === "/storeVisitedSites") database.storeVisitedSites(parsedParameters);
 			});
 
 			response.end("Here");

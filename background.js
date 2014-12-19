@@ -24,7 +24,7 @@
 
 	function cacheVisitedSite(visitedSite) {
 		visitedSites.push(visitedSite);
-		console.log(JSON.stringify(visitedSite));
+		//console.log(JSON.stringify(visitedSite));
 		if (visitedSites.length >= cacheLimitVisitedSites) reportVisitedSitesToServer();
 	}
 
@@ -65,7 +65,7 @@
 			xhr.open("POST", src, true);
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xhr.send(data);
-			console.log("Set of " + cacheLimitFunctionCalls + " Observed functions logged");
+			console.log("Set of " + cacheLimitVisitedSites + " visited sites logged");
 		});
 			
 	}
@@ -84,7 +84,7 @@
 				cacheObservedFunctionCall(request.data);
 			} else if (request.type === "reportVisitedSite") {
 				if (sender.data) request.data.tabUrl = sender.tab.url;
-				cacheVisitedSiteCall(request.data);
+				cacheVisitedSite(request.data);
 			}
 		}
 	);
