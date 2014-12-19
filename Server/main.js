@@ -19,7 +19,7 @@
 		var qs = require("querystring");
 		var path = url.parse(request.url, true).pathname;
 
-		if (path === "/storeObservedFunctionCalls") {
+		if (path === "/storeObservedFunctionCalls" || path === "/storeVisitedSite") {
 			var body = "";
 
 			request.on("data", function(data){
@@ -37,8 +37,9 @@
 					console.log("JSON parse error occured!");
 				}
 
-				console.log("--- Report received! ---");
-				database.storeObservedFunctionCall(parsedParameters);
+				console.log("--- Request received! ---");
+				if (path === "/storeObservedFunctionCalls") database.storeObservedFunctionCall(parsedParameters);
+				if (path === "/storeVisitedSites") database.storeVisitedSite(parsedParameters);
 			});
 
 			response.end("Here");

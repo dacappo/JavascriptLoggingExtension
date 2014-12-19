@@ -110,3 +110,14 @@ CREATE TABLE JsObserver.DocumentGetCookie (
 					Timestamp TIMESTAMP,
 					PRIMARY KEY (Id));
 
+# all websites visited with the extension
+CREATE TABLE JsObserver.VisitedSites (	
+					Id INT NOT NULL AUTO_INCREMENT,
+					Url TEXT,
+					Origin VARCHAR(300),
+					CookieUsed BOOLEAN,
+					SessionStorageUsed BOOLEAN,
+					LocalStorageUsed BOOLEAN,
+					Timestamp TIMESTAMP,
+					PRIMARY KEY (Id));
+

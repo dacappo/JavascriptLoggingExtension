@@ -1,4 +1,4 @@
-{
+ {
   "name": "Javascript Logging",
   "description": "This extension logges various Javascript API calls wihtin websites.",
   "version": "0.2",
@@ -16,6 +16,12 @@
          "js" : ["content.js"],
          "run_at" : "document_start",
          "all_frames" : true
+      },
+      {
+         "matches" : ["http://*/*","https://*/*"],
+         "js" : ["contentVisitedSites.js"],
+         "run_at" : "document_start",
+         "all_frames" : false
       }
    ],
 

@@ -256,6 +256,22 @@
 		});
 	}
 
+	function storeVisitedSite(visitedSite) {
+		var query = "INSERT INTO JsObserver.VisitedSites (Url, Origin, CookieUsed, SessionStorageUsed, LocalStorageUsed, Timestamp) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP);";
+
+		var parameters = [	visitedSite.id,
+							visitedSite.url,
+							visitedSite.origin, 
+							visitedSite.cookieUsed,
+							visitedSite.sessionStorageUsed,
+							visitedSite.localStorageUsed];
+
+		connection.query(query, parameters, function(err) {
+			if (err) throw err;
+			console.log("Successfully inserted " + visitedSite.origin + " visit!");
+		});
+	}
+
 	exports.storeObservedFunctionCall = function(data) {
 		if (!data) return;
 
@@ -278,6 +294,19 @@
 			} else if (observedFunctionCall.function === "window.postMessage") {
 				storeWindowPostMessage(observedFunctionCall);
 			}
+		});
+
+		connection.end();
+	};
+
+	exports.storeVisitedSites = function(data) {
+		if (!data) return;
+
+		connection = mysql.createConnection(credentials);
+		connection.connect();
+
+		data.forEach(function(observedFunctionCall) {
+			storeVisitedSite(data);
 		});
 
 		connection.end();
